@@ -116,9 +116,9 @@ class Janela(Funcoes):
         self.cont1 = Frame(self.diario, bg=branco)
         self.cont1.place(relx=0.02, rely=0.02, relheight=0.96, relwidth=0.96)
 
-        self.imgLogo = PhotoImage(file=pastaApp+"\\img/logo2.png")
+        self.imgLogo = PhotoImage(file=pastaApp+"\\img/logo.png")
         self.lbLogo = Label(self.cont1,image=self.imgLogo, bg=branco)
-        self.lbLogo.place(relx=0.4, rely=0.06)
+        self.lbLogo.place(relx=0.35, rely=0.02)
         
         self.lbLogin = Label(self.cont1, text='ID', width=5, font=('verdana',10,), bg=branco, fg = cinza)
         self.lbLogin.place(relx=0.05,rely=0.20)
@@ -132,7 +132,7 @@ class Janela(Funcoes):
 
     def botoes(self):
         self.entrar = Button(self.cont1, text='Login', font=('arial','12'), width=5,
-                                bg='#1E90FF', fg='#F8F8FF',command= self.tela2)
+                                bg='#1E90FF', fg='#F8F8FF',command= self.verificaLogin)
         self.entrar.place(relx=0.74,rely=0.80)
 
         self.cadastro = Button(self.cont1, text='Novo Usuário', font=('arial','10'), width=10,
@@ -140,7 +140,7 @@ class Janela(Funcoes):
         self.cadastro.place(relx=0.02,rely=0.80)       
 
 
-    def vericaLogin(self):        
+    def verificaLogin(self):        
         self.conectaDB()
         self.regID = self.loginEntry.get()
         self.regSenha = self.senhaEntry.get()
@@ -160,7 +160,8 @@ class Janela(Funcoes):
                     self.aviso(texto='ERRO!\nSenha ou usuário\n incorretos!')
             except:
                 self.aviso(texto='ERRO!\nUsuário não\nEncontrado!')
-
+        self.loginEntry.delete(0,END)
+        self.senhaEntry.delete(0,END)
         self.connU.commit()
         self.desconectaBDusuarios()
 
@@ -188,7 +189,7 @@ class Janela(Funcoes):
     def menus(self):
         self.barraDeMenus = Menu(self.telaPrincipal)
         self.menuCadastro = Menu(self.barraDeMenus,tearoff=0)
-        self.barraDeMenus.add_cascade(label="Cadastrar",menu=self.menuCadastro)
+        self.barraDeMenus.add_cascade(label="Cadastro",menu=self.menuCadastro)
         self.menuCadastro.add_command(label="Escolas", command=self.cadastroEscola)
         self.menuCadastro.add_command(label="Turmas", command=self.cadastroTurmas)
         
@@ -203,11 +204,11 @@ class Janela(Funcoes):
         self.listaturma.heading('#4',text='Escola')
         self.listaturma.heading('#5',text='Usuário')
 
-        self.listaturma.column('#0', width=0)
-        self.listaturma.column('#1', width=50)
+        self.listaturma.column('#0', width=5)
+        self.listaturma.column('#1', width=45)
         self.listaturma.column('#2', width=100)
-        self.listaturma.column('#3', width=200)
-        self.listaturma.column('#4', width=100)
+        self.listaturma.column('#3', width=100)
+        self.listaturma.column('#4', width=200)
         self.listaturma.column('#5', width=100)
 
         self.listaturma.place(relx=0.01,rely=0.42,relwidth=0.96,relheight=0.70)
@@ -384,7 +385,7 @@ class Janela(Funcoes):
         self.lbEScola2.place(relx=0.02, rely=0.45)
         #banco de dados
         self.conectaDB()
-        self.listar = self.cursor.execute("""SELECT codEscola, nmEscola FROM escolas""")
+        self.listar = self.cursor.execute("""SELECT nmEscola FROM escolas""")
         lista = self.listar.fetchall()
         self.desconectaBDusuarios()
         
@@ -425,7 +426,7 @@ class Janela(Funcoes):
         self.nmTurma = self.entryTurma.get()
         self.disciplina = self.entryDisciplina.get()
         self.escola = self.comboEntry.get()
-        self.professor = self.loginEntry.get()
+        self.professor = self.regID
 
         if self.nmTurma.__len__() == 0 or self.disciplina.__len__() == 0 or self.escola.__len__() == 0:
             self.aviso(texto='Por favor\nDigite todos os dados')
